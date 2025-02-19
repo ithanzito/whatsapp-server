@@ -86,7 +86,23 @@ app.get('/status', (req, res) => {
 // Rota para obter QR Code
 app.get('/qr', (req, res) => {
     if (lastQRCode) {
-        res.json({ qr: lastQRCode });
+        res.send(`
+            <html>
+                <head>
+                    <title>WhatsApp QR Code</title>
+                    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+                </head>
+                <body style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f2f5;">
+                    <div>
+                        <div id="qrcode"></div>
+                        <p style="text-align: center; margin-top: 20px; font-family: Arial;">Escaneie o QR Code com seu WhatsApp</p>
+                    </div>
+                    <script>
+                        new QRCode(document.getElementById("qrcode"), "${lastQRCode}");
+                    </script>
+                </body>
+            </html>
+        `);
     } else {
         res.status(404).json({ error: 'QR Code não disponível' });
     }
